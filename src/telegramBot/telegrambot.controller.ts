@@ -1,6 +1,8 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiBody, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+import { TelegrambotPipe } from './pipe/telegrambot.pipe';
+
 import { OrderDto } from './dto/order.dto';
 import { СallbackDto } from './dto/callback.dto';
 
@@ -21,7 +23,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения в чат "Заявки"',
   })
   @ApiBody({ type: OrderDto })
-  async order(@Body() body: OrderDto): Promise<any> {
+  async order(@Body(TelegrambotPipe) body: OrderDto): Promise<any> {
     return this.telegramBotService.order(body);
   }
 
@@ -34,7 +36,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения в чат "Обратный звонок"',
   })
   @ApiBody({ type: СallbackDto })
-  async callback(@Body() body: СallbackDto): Promise<any> {
+  async callback(@Body(TelegrambotPipe) body: СallbackDto): Promise<any> {
     return this.telegramBotService.callback(body);
   }
 }

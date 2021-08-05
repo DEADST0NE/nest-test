@@ -10,14 +10,17 @@ export class СallbackDto {
   })
   phone: string;
 
-  @IsString({
-    message: 'Имя пользователя не строка',
-  })
-  @IsNotEmpty({
-    message: 'Имя пользователя пусто',
-  })
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
   })
   userName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Комментарий',
+  })
+  comment: string;
 }

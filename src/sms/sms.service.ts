@@ -11,7 +11,7 @@ import moment from 'moment';
 
 import { SendCodeDto } from './dto/sendCode.dto';
 
-import random from 'utils/random';
+import { random } from 'utils/random';
 
 @Injectable()
 export class SmsService {

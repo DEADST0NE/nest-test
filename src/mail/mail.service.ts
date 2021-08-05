@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 import { CreateEmployeeMailDto } from './dto/сreateEmployeeMail.dto';
 
-import random from '../../utils/random';
+import { random } from '../../utils/random';
 
 @Injectable()
 export class MailService {

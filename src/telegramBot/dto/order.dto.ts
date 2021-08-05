@@ -1,15 +1,76 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+
+export enum transactionTypeEnum {
+  BUY = 'Покупка',
+  SELL = 'Продажа',
+}
+
+export enum userTypeEnum {
+  WHOLESALE = 'опт.',
+  RETAIL = 'Роз.',
+}
 
 export class OrderDto {
-  @IsString({
-    message: 'Текст сообщения не строка',
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Город заявки',
   })
-  @IsNotEmpty({
-    message: 'Текст сообщения пуст',
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Отделение города',
+  })
+  branch: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Тип валюты',
+  })
+  currency: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Тип операции',
+  })
+  transactionType: transactionTypeEnum;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Курс валюты',
+  })
+  rate: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Сумма',
+  })
+  sum: string;
+
+  @IsPhoneNumber('UA', {
+    message: 'Номер телефона некорректен',
   })
   @ApiProperty({
-    description: 'Текст сообщения для отправки',
+    description: 'Номер для звонка',
   })
-  message: string;
+  phone: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Тип пользователя',
+  })
+  userType: userTypeEnum;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Наименования пользователя',
+  })
+  userName: string;
 }

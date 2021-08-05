@@ -15,7 +15,7 @@ const lower = 'abcdefghijklmnopqrstuvwxyz',
   },
   tk: Array<string> = Object.keys(types);
 
-export default function (length?: number, type?: string): string {
+export function random(length?: number, type?: string): string {
   switch (arguments.length) {
     case 0:
       length = 12;

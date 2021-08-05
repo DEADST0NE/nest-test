@@ -11,7 +11,7 @@ export class TelegrafService implements OnModuleInit {
 
   public sendMessage(text: string) {
     return this.bt.telegram.sendMessage(process.env.TELEGRAM_CHAT_ORDER, text, {
-      parse_mode: 'MarkdownV2',
+      parse_mode: 'HTML',
     });
   }
 }
