@@ -22,7 +22,6 @@ import Joi from 'joi';
         // Redis server
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.string().required(),
-        REDIS_TTL: Joi.number().required(),
         REDIS_PASS: Joi.string().required(),
         // Telegram bot
         TELEGRAM_BOT_TOKEN: Joi.string().required(),

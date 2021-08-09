@@ -3,8 +3,10 @@ import { ApiBody, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { TelegrambotPipe } from './pipe/telegrambot.pipe';
 
-import { OrderDto } from './dto/order.dto';
+import { ExchangeDto } from './dto/exchange.dto';
 import { СallbackDto } from './dto/callback.dto';
+import { TransToUaDto } from './dto/transToUa.dto';
+import { TransToWorld } from './dto/transToWorld.dto';
 
 import { TelegramBotService } from './telegrambot.service';
 
@@ -14,17 +16,17 @@ import { TelegramBotService } from './telegrambot.service';
 export class TelegramBotController {
   constructor(private readonly telegramBotService: TelegramBotService) {}
 
-  @Post('/order')
+  @Post('/exchange')
   @ApiResponse({
     status: 201,
     type: String,
   })
   @ApiOperation({
-    summary: 'Отправка сообщения в чат "Заявки"',
+    summary: 'Отправка сообщения заявка на обмен валюты',
   })
-  @ApiBody({ type: OrderDto })
-  async order(@Body(TelegrambotPipe) body: OrderDto): Promise<any> {
-    return this.telegramBotService.order(body);
+  @ApiBody({ type: ExchangeDto })
+  async order(@Body(TelegrambotPipe) body: ExchangeDto): Promise<any> {
+    return this.telegramBotService.exchange(body);
   }
 
   @Post('/callback')
@@ -38,5 +40,31 @@ export class TelegramBotController {
   @ApiBody({ type: СallbackDto })
   async callback(@Body(TelegrambotPipe) body: СallbackDto): Promise<any> {
     return this.telegramBotService.callback(body);
+  }
+
+  @Post('/transToUa')
+  @ApiResponse({
+    status: 201,
+    type: String,
+  })
+  @ApiOperation({
+    summary: 'Отправка сообщения заявка на переводы по Украине',
+  })
+  @ApiBody({ type: TransToUaDto })
+  async transToUa(@Body(TelegrambotPipe) body: TransToUaDto): Promise<any> {
+    return this.telegramBotService.transToUa(body);
+  }
+
+  @Post('/transToWorld')
+  @ApiResponse({
+    status: 201,
+    type: String,
+  })
+  @ApiOperation({
+    summary: 'Отправка сообщения заявка на международные переводы',
+  })
+  @ApiBody({ type: TransToWorld })
+  async transToWorld(@Body(TelegrambotPipe) body: TransToWorld): Promise<any> {
+    return this.telegramBotService.transToWorld(body);
   }
 }

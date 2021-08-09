@@ -23,7 +23,7 @@ export class SmsService {
   public async sendCode(body: SendCodeDto) {
     const smsCode: string =
       (await this.cacheManager.get(body.phone)) || random(4, 'numeric');
-    await this.cacheManager.set(body.phone, smsCode);
+    await this.cacheManager.set(body.phone, smsCode, { ttl: 300 });
     const dataCreate = moment().format('hh:mm DD.MM.YY');
 
     return this.httpService.axiosRef

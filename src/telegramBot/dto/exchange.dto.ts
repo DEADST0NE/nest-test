@@ -2,16 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 
 export enum transactionTypeEnum {
-  BUY = 'Покупка',
-  SELL = 'Продажа',
+  BUY,
+  SELL,
 }
 
 export enum userTypeEnum {
-  WHOLESALE = 'опт.',
-  RETAIL = 'Роз.',
+  WHOLESALE,
+  RETAIL,
 }
 
-export class OrderDto {
+export class ExchangeDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
@@ -33,10 +33,10 @@ export class OrderDto {
   })
   currency: string;
 
-  @IsString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'Тип операции',
+    enum: transactionTypeEnum,
   })
   transactionType: transactionTypeEnum;
 
@@ -49,9 +49,15 @@ export class OrderDto {
 
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Сумма',
+    description: 'Принимаем',
   })
-  sum: string;
+  input: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Отдаем',
+  })
+  output: string;
 
   @IsPhoneNumber('UA', {
     message: 'Номер телефона некорректен',
@@ -64,6 +70,7 @@ export class OrderDto {
   @IsNotEmpty()
   @ApiProperty({
     description: 'Тип пользователя',
+    enum: userTypeEnum,
   })
   userType: userTypeEnum;
 

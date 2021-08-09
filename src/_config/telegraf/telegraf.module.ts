@@ -1,11 +1,12 @@
-import { TelegrafService } from './telegraf.service';
+import { Module } from '@nestjs/common';
 
 import { Telegraf } from 'telegraf';
 
-import { Module } from '@nestjs/common';
+import { AppCacheModule } from '../cacheAndRedis';
+import { TelegrafService } from './telegraf.service';
 
 @Module({
-  imports: [Telegraf],
+  imports: [Telegraf, AppCacheModule],
   providers: [TelegrafService],
   exports: [TelegrafService],
 })

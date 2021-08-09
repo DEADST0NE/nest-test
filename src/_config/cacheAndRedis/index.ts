@@ -8,7 +8,6 @@ import redisStore from 'cache-manager-redis-store';
         store: redisStore,
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
-        ttl: Number(process.env.REDIS_TTL),
         password: process.env.REDIS_PASS,
       }),
     }),
