@@ -7,6 +7,7 @@ import { ExchangeDto } from './dto/exchange.dto';
 import { СallbackDto } from './dto/callback.dto';
 import { TransToUaDto } from './dto/transToUa.dto';
 import { TransToWorld } from './dto/transToWorld.dto';
+import { ElectExchangeDto } from './dto/electronExchange.dto';
 
 import { TelegramBotService } from './telegrambot.service';
 
@@ -66,5 +67,20 @@ export class TelegramBotController {
   @ApiBody({ type: TransToWorld })
   async transToWorld(@Body(TelegrambotPipe) body: TransToWorld): Promise<any> {
     return this.telegramBotService.transToWorld(body);
+  }
+
+  @Post('/electExchange')
+  @ApiResponse({
+    status: 201,
+    type: String,
+  })
+  @ApiOperation({
+    summary: 'Отправка сообщения заявка на обмен электронных валют',
+  })
+  @ApiBody({ type: ElectExchangeDto })
+  async electExchange(
+    @Body(TelegrambotPipe) body: ElectExchangeDto,
+  ): Promise<any> {
+    return this.telegramBotService.electExchange(body);
   }
 }

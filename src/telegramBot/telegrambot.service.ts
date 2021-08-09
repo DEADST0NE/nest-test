@@ -10,6 +10,7 @@ import {
 import { СallbackDto } from './dto/callback.dto';
 import { TransToUaDto } from './dto/transToUa.dto';
 import { TransToWorld } from './dto/transToWorld.dto';
+import { ElectExchangeDto } from './dto/electronExchange.dto';
 
 @Injectable()
 export class TelegramBotService {
@@ -96,6 +97,23 @@ export class TelegramBotService {
           `<code>Имя: ${body.userName}\n` +
           `Комментарий: ${body.comment}</code>\n` +
           `+${body.phone}`,
+      );
+      return 'Сообщения отправленно';
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // Заявка обмен электронных валют
+  public async electExchange(body: ElectExchangeDto) {
+    try {
+      await this.telegraf.sendMessage(
+        'order',
+        `<b>Обмен электронных валют</b>:\n` +
+          `<code>Имя: ${body.userName}\n` +
+          `Комментарий: ${body.comment}</code>\n` +
+          `+${body.phone}\n` +
+          `@${body.telegramName}`,
       );
       return 'Сообщения отправленно';
     } catch (err) {
