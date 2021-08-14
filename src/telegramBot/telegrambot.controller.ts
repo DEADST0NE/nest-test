@@ -1,86 +1,90 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiBody, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-import { TelegrambotPipe } from './pipe/telegrambot.pipe';
-
-import { ExchangeDto } from './dto/exchange.dto';
+// Input Data
+import { FiatExchangeDto } from './dto/fiatExchange.dto';
 import { СallbackDto } from './dto/callback.dto';
-import { TransToUaDto } from './dto/transToUa.dto';
-import { TransToWorld } from './dto/transToWorld.dto';
-import { ElectExchangeDto } from './dto/electronExchange.dto';
+import { UaTransferDto } from './dto/uaTransfer.dto';
+import { InternationalTransferDto } from './dto/internationalTransfer.dto';
+import { CryptoExchangeDto } from './dto/electronExchange.dto';
+
+// Pipe
+import { ValidationBotPipe } from './pipe/validationBot.pipe';
+
+// Output Data
+import { ResponseBotDto } from './dto/responseBot.dto';
 
 import { TelegramBotService } from './telegrambot.service';
 
 @ApiTags('bot')
 @Controller('bot')
-@Controller()
 export class TelegramBotController {
   constructor(private readonly telegramBotService: TelegramBotService) {}
 
-  @Post('/exchange')
+  @Post('/fiat-exchange')
   @ApiResponse({
     status: 201,
-    type: String,
+    type: ResponseBotDto,
   })
   @ApiOperation({
     summary: 'Отправка сообщения заявка на обмен валюты',
   })
-  @ApiBody({ type: ExchangeDto })
-  async order(@Body(TelegrambotPipe) body: ExchangeDto): Promise<any> {
-    return this.telegramBotService.exchange(body);
+  @ApiBody({ type: FiatExchangeDto })
+  async order(@Body(new ValidationBotPipe()) body: FiatExchangeDto) {
+    return this.telegramBotService.fiatExchange(body);
   }
 
   @Post('/callback')
   @ApiResponse({
     status: 201,
-    type: String,
+    type: ResponseBotDto,
   })
   @ApiOperation({
     summary: 'Отправка сообщения в чат "Обратный звонок"',
   })
   @ApiBody({ type: СallbackDto })
-  async callback(@Body(TelegrambotPipe) body: СallbackDto): Promise<any> {
+  async callback(@Body(new ValidationBotPipe()) body: СallbackDto) {
     return this.telegramBotService.callback(body);
   }
 
-  @Post('/transToUa')
+  @Post('/ua-transfer')
   @ApiResponse({
     status: 201,
-    type: String,
+    type: ResponseBotDto,
   })
   @ApiOperation({
     summary: 'Отправка сообщения заявка на переводы по Украине',
   })
-  @ApiBody({ type: TransToUaDto })
-  async transToUa(@Body(TelegrambotPipe) body: TransToUaDto): Promise<any> {
-    return this.telegramBotService.transToUa(body);
+  @ApiBody({ type: UaTransferDto })
+  async uaTransfer(@Body() body: UaTransferDto) {
+    return this.telegramBotService.uaTransfer(body);
   }
 
-  @Post('/transToWorld')
+  @Post('/international-transfer')
   @ApiResponse({
     status: 201,
-    type: String,
+    type: ResponseBotDto,
   })
   @ApiOperation({
     summary: 'Отправка сообщения заявка на международные переводы',
   })
-  @ApiBody({ type: TransToWorld })
-  async transToWorld(@Body(TelegrambotPipe) body: TransToWorld): Promise<any> {
-    return this.telegramBotService.transToWorld(body);
+  @ApiBody({ type: InternationalTransferDto })
+  async internationalTransfer(
+    @Body(new ValidationBotPipe()) body: InternationalTransferDto,
+  ) {
+    return this.telegramBotService.internationalTransfer(body);
   }
 
-  @Post('/electExchange')
+  @Post('/crypto-exchange')
   @ApiResponse({
     status: 201,
-    type: String,
+    type: ResponseBotDto,
   })
   @ApiOperation({
     summary: 'Отправка сообщения заявка на обмен электронных валют',
   })
-  @ApiBody({ type: ElectExchangeDto })
-  async electExchange(
-    @Body(TelegrambotPipe) body: ElectExchangeDto,
-  ): Promise<any> {
-    return this.telegramBotService.electExchange(body);
+  @ApiBody({ type: CryptoExchangeDto })
+  async cryptoExchange(@Body(new ValidationBotPipe()) body: CryptoExchangeDto) {
+    return this.telegramBotService.cryptoExchange(body);
   }
 }

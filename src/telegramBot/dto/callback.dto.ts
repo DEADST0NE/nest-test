@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsPhoneNumber, IsString, IsNotEmpty } from 'class-validator';
+import { IsPhoneNumber } from 'class-validator';
 
 export class СallbackDto {
   @IsPhoneNumber('UA', {
@@ -10,17 +10,15 @@ export class СallbackDto {
   })
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
+    required: false,
   })
-  userName: string;
+  userName?: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Комментарий',
+    required: false,
   })
-  comment: string;
+  comment?: string;
 }

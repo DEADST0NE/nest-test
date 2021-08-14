@@ -1,2 +1,2 @@
 export const shielding = (text: string) =>
-  text.replace(/[*+?^${}()|[\]\\]/g, '\\$&');
+  text.replace(/[-[\]{}()*+?.,\\^$]/g, '\\$&');

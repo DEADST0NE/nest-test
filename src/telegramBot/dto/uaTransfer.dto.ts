@@ -1,27 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsString, IsPhoneNumber } from 'class-validator';
 
-export class TransToUaDto {
-  @IsString()
-  @IsNotEmpty()
+export class UaTransferDto {
   @ApiProperty({
     description: 'Город откуда происходит перевод',
   })
   outputCity: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Город куда происходит перевод',
   })
   inputCity: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Комментарий',
+    required: false,
   })
-  comment: string;
+  comment?: string;
 
   @IsPhoneNumber('UA', {
     message: 'Номер телефона некорректен',
@@ -31,10 +27,9 @@ export class TransToUaDto {
   })
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
+    required: false,
   })
-  userName: string;
+  userName?: string;
 }

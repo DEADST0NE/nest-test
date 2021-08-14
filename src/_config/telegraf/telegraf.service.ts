@@ -1,19 +1,17 @@
-import {
-  CACHE_MANAGER,
-  Inject,
-  Injectable,
-  OnModuleInit,
-} from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { Telegraf } from 'telegraf';
 
 type groupType = 'order' | 'callback';
 
 @Injectable()
-export class TelegrafService implements OnModuleInit {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
-
+export class TelegrafService {
   private bt: Telegraf;
+
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {
+    // Инициализация модуля telegraf
+    this.bt = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+  }
 
   // Получить id чата
   private getChatsID = (groupType: groupType) => {
@@ -25,17 +23,12 @@ export class TelegrafService implements OnModuleInit {
     }
   };
 
-  // Инициализация модуля telegraf
-  onModuleInit() {
-    this.bt = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-  }
-
   // Получить новый Id заявки и сохранить ее в redis
   public async getApplicationID() {
     const _nameID = 'telegramApplicationID';
     let id: string = (await this.cacheManager.get(_nameID)) || '0';
     if (id === '999999') id = '0';
-    id = (Number(id) + 1).toString().padStart(6, '0');
+    id = (+id + 1).toString().padStart(6, '0');
     await this.cacheManager.set(_nameID, id, { ttl: 0 });
     return id;
   }

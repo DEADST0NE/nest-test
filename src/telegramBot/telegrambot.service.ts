@@ -1,56 +1,48 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'; // HttpException, HttpStatus,
 
 import { TelegrafService } from '../_config/telegraf/telegraf.service';
 
-import {
-  ExchangeDto,
-  transactionTypeEnum,
-  userTypeEnum,
-} from './dto/exchange.dto';
+import { FiatExchangeDto, transactionTypeEnum } from './dto/fiatExchange.dto';
 import { СallbackDto } from './dto/callback.dto';
-import { TransToUaDto } from './dto/transToUa.dto';
-import { TransToWorld } from './dto/transToWorld.dto';
-import { ElectExchangeDto } from './dto/electronExchange.dto';
+import { UaTransferDto } from './dto/uaTransfer.dto';
+import { InternationalTransferDto } from './dto/internationalTransfer.dto';
+import { CryptoExchangeDto } from './dto/electronExchange.dto';
+
+import { TelegramException } from './exception/telegram.exception';
 
 @Injectable()
 export class TelegramBotService {
   constructor(private readonly telegraf: TelegrafService) {}
 
   // Заявка обмен валюты
-  public async exchange(body: ExchangeDto) {
+  public async fiatExchange(body: FiatExchangeDto) {
     try {
       const id = await this.telegraf.getApplicationID();
 
-      const textInput =
-        body.transactionType === transactionTypeEnum.BUY
-          ? 'Покупают'
-          : 'Продаем';
+      const textTransactionTypeEnum = (a: string, b: string) =>
+        body.transactionType === transactionTypeEnum.BUY ? a : b;
 
-      const textOutput =
-        body.transactionType === transactionTypeEnum.BUY
-          ? 'Отдают'
-          : 'Получаем';
-
-      const userType =
-        body.userType === userTypeEnum.WHOLESALE ? 'опт.' : 'роз.';
+      const userType = 'Нужно посоветоваться с Ильей';
 
       await this.telegraf.sendMessage(
         'order',
         `<b>${body.city} (${userType})</b>:\n` +
           `<code>Вид деятельности: Обмен валют\n` +
           `Номер заказа: ${id}\n` +
-          `Отделение: ${body.branch}\n` +
-          `Валюта: ${body.currency}\n` +
-          `Тип операции: ${body.transactionType}\n` +
+          `Отделение: ${body.department}\n` +
+          `Валюта: ${body.currencyFrom}/${body.currencyTo}\n` +
+          `Тип операции: ${textTransactionTypeEnum('Покупка', 'Продажа')}\n` +
           `Курс: ${body.rate}\n` +
-          `${textInput}: ${body.input}\n` +
-          `${textOutput}: ${body.output}\n` +
-          `Имя: ${body.userName}</code>\n` +
+          `${textTransactionTypeEnum('Покупают', 'Продаем')}: ${body.input}\n` +
+          `${textTransactionTypeEnum('Отдают', 'Получаем')}: ${body.output}\n` +
+          `Имя: ${body.userName || 'Не указано'}</code>\n` +
           `+${body.phone}`,
       );
-      return 'Сообщения отправленно';
+      return {
+        success: true,
+      };
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new TelegramException();
     }
   }
 
@@ -60,64 +52,72 @@ export class TelegramBotService {
       await this.telegraf.sendMessage(
         'callback',
         `<b>Обратный звонок</b>:\n` +
-          `<code>Имя: ${body.userName}\n` +
-          `Комментарий: ${body.comment}</code>\n` +
+          `<code>Имя: ${body.userName || 'Не указано'}\n` +
+          `Комментарий: ${body.comment || ''}</code>\n` +
           `+${body.phone}`,
       );
-      return 'Сообщения отправленно';
+      return {
+        success: true,
+      };
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new TelegramException();
     }
   }
 
   // Заявка Денежные переводы по Украине
-  public async transToUa(body: TransToUaDto) {
+  public async uaTransfer(body: UaTransferDto) {
     try {
       await this.telegraf.sendMessage(
         'order',
         `<b>Переводы по Украине</b>:\n` +
-          `<code>Имя: ${body.userName}\n` +
+          `<code>Имя: ${body.userName || 'Не указано'}\n` +
           `Откуда: ${body.outputCity}\n` +
           `Куда: ${body.inputCity}\n` +
-          `Комментарий: ${body.comment}</code>\n` +
+          `Комментарий: ${body.comment || ''}</code>\n` +
           `+${body.phone}`,
       );
-      return 'Сообщения отправленно';
+      return {
+        success: true,
+      };
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new TelegramException();
     }
   }
 
   // Заявка Международные переводы
-  public async transToWorld(body: TransToWorld) {
+  public async internationalTransfer(body: InternationalTransferDto) {
     try {
       await this.telegraf.sendMessage(
         'order',
         `<b>Международные переводы</b>:\n` +
-          `<code>Имя: ${body.userName}\n` +
-          `Комментарий: ${body.comment}</code>\n` +
+          `<code>Имя: ${body.userName || 'Не указано'}\n` +
+          `Комментарий: ${body.comment || ''}</code>\n` +
           `+${body.phone}`,
       );
-      return 'Сообщения отправленно';
+      return {
+        success: true,
+      };
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new TelegramException();
     }
   }
 
   // Заявка обмен электронных валют
-  public async electExchange(body: ElectExchangeDto) {
+  public async cryptoExchange(body: CryptoExchangeDto) {
     try {
       await this.telegraf.sendMessage(
         'order',
         `<b>Обмен электронных валют</b>:\n` +
-          `<code>Имя: ${body.userName}\n` +
-          `Комментарий: ${body.comment}</code>\n` +
+          `<code>Имя: ${body.userName || 'Не указано'}\n` +
+          `Комментарий: ${body.comment || ''}</code>\n` +
           `+${body.phone}\n` +
           `@${body.telegramName}`,
       );
-      return 'Сообщения отправленно';
+      return {
+        success: true,
+      };
     } catch (err) {
-      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new TelegramException();
     }
   }
 }

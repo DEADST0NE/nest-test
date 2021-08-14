@@ -1,6 +1,8 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+// import { ValidationPipe } from '@nestjs/common';
+
+//import { ShieldingPipe } from './_config/pipe/shielding.pipe';
 
 import { AppModule } from './app.module';
 
@@ -24,7 +26,7 @@ async function bootstrap() {
   app.enableCors();
 
   // Добавляем валидацию
-  app.useGlobalPipes(new ValidationPipe());
+  //app.useGlobalPipes(new ValidationPipe());
 
   // Стартуем приложение
   await app.listen(parseInt(process.env.PORT));

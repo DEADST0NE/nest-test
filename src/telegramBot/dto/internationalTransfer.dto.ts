@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsPhoneNumber } from 'class-validator';
 
-export class TransToWorld {
-  @IsString()
-  @IsNotEmpty()
+export class InternationalTransferDto {
   @ApiProperty({
     description: 'Комментарий',
+    required: false,
   })
-  comment: string;
+  comment?: string;
 
   @IsPhoneNumber('UA', {
     message: 'Номер телефона некорректен',
@@ -17,10 +16,9 @@ export class TransToWorld {
   })
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
+    required: false,
   })
-  userName: string;
+  userName?: string;
 }

@@ -1,22 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsPhoneNumber, Matches } from 'class-validator';
+import { IsPhoneNumber } from 'class-validator';
 
-export class ElectExchangeDto {
-  @Matches(/([A-z]|_|[0-9]){5,}/gm, {
-    message: 'Логин пользователя телеграм не валиден',
-  })
-  @IsNotEmpty()
+export class CryptoExchangeDto {
   @ApiProperty({
     description: 'Логин пользователя в телеграм',
   })
   telegramName: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Комментарий',
+    required: false,
   })
-  comment: string;
+  comment?: string;
 
   @IsPhoneNumber('UA', {
     message: 'Номер телефона некорректен',
@@ -26,10 +21,9 @@ export class ElectExchangeDto {
   })
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
+    required: false,
   })
-  userName: string;
+  userName?: string;
 }

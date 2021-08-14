@@ -6,32 +6,30 @@ export enum transactionTypeEnum {
   SELL,
 }
 
-export enum userTypeEnum {
-  WHOLESALE,
-  RETAIL,
-}
-
-export class ExchangeDto {
+export class FiatExchangeDto {
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Город заявки',
   })
   city: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Отделение города',
   })
-  branch: string;
+  department: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
-    description: 'Тип валюты',
+    description: 'Тип валюты принимаем',
   })
-  currency: string;
+  currencyFrom: string;
+
+  @IsString()
+  @ApiProperty({
+    description: 'Тип валюты отдаем',
+  })
+  currencyTo: string;
 
   @IsNotEmpty()
   @ApiProperty({
@@ -41,19 +39,18 @@ export class ExchangeDto {
   transactionType: transactionTypeEnum;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Курс валюты',
   })
   rate: string;
 
-  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     description: 'Принимаем',
   })
   input: string;
 
-  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     description: 'Отдаем',
   })
@@ -67,17 +64,9 @@ export class ExchangeDto {
   })
   phone: string;
 
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Тип пользователя',
-    enum: userTypeEnum,
-  })
-  userType: userTypeEnum;
-
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'Наименования пользователя',
+    required: false,
   })
-  userName: string;
+  userName?: string;
 }
