@@ -56,7 +56,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения заявка на переводы по Украине',
   })
   @ApiBody({ type: UaTransferDto })
-  async uaTransfer(@Body() body: UaTransferDto) {
+  async uaTransfer(@Body(new ValidationBotPipe()) body: UaTransferDto) {
     return this.telegramBotService.uaTransfer(body);
   }
 
