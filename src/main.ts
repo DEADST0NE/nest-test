@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-// import { ValidationPipe } from '@nestjs/common';
 
-//import { ShieldingPipe } from './_config/pipe/shielding.pipe';
+import { CoreExceptionFilter } from './_config/exception/Core.exception';
+
+import { CorePipe } from './_config/pipe/Core.pipe';
 
 import { AppModule } from './app.module';
 
@@ -25,8 +26,11 @@ async function bootstrap() {
   // Отключаем защиту cors
   app.enableCors();
 
+  // Глобальный перехвадчик ошибок
+  app.useGlobalFilters(new CoreExceptionFilter());
+
   // Добавляем валидацию
-  //app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new CorePipe());
 
   // Стартуем приложение
   await app.listen(parseInt(process.env.PORT));

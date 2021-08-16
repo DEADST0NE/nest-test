@@ -8,9 +8,6 @@ import { UaTransferDto } from './dto/uaTransfer.dto';
 import { InternationalTransferDto } from './dto/internationalTransfer.dto';
 import { CryptoExchangeDto } from './dto/electronExchange.dto';
 
-// Pipe
-import { ValidationBotPipe } from './pipe/validationBot.pipe';
-
 // Output Data
 import { ResponseBotDto } from './dto/responseBot.dto';
 
@@ -30,7 +27,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения заявка на обмен валюты',
   })
   @ApiBody({ type: FiatExchangeDto })
-  async order(@Body(new ValidationBotPipe()) body: FiatExchangeDto) {
+  async order(@Body() body: FiatExchangeDto) {
     return this.telegramBotService.fiatExchange(body);
   }
 
@@ -43,7 +40,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения в чат "Обратный звонок"',
   })
   @ApiBody({ type: СallbackDto })
-  async callback(@Body(new ValidationBotPipe()) body: СallbackDto) {
+  async callback(@Body() body: СallbackDto) {
     return this.telegramBotService.callback(body);
   }
 
@@ -56,7 +53,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения заявка на переводы по Украине',
   })
   @ApiBody({ type: UaTransferDto })
-  async uaTransfer(@Body(new ValidationBotPipe()) body: UaTransferDto) {
+  async uaTransfer(@Body() body: UaTransferDto) {
     return this.telegramBotService.uaTransfer(body);
   }
 
@@ -69,9 +66,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения заявка на международные переводы',
   })
   @ApiBody({ type: InternationalTransferDto })
-  async internationalTransfer(
-    @Body(new ValidationBotPipe()) body: InternationalTransferDto,
-  ) {
+  async internationalTransfer(@Body() body: InternationalTransferDto) {
     return this.telegramBotService.internationalTransfer(body);
   }
 
@@ -84,7 +79,7 @@ export class TelegramBotController {
     summary: 'Отправка сообщения заявка на обмен электронных валют',
   })
   @ApiBody({ type: CryptoExchangeDto })
-  async cryptoExchange(@Body(new ValidationBotPipe()) body: CryptoExchangeDto) {
+  async cryptoExchange(@Body() body: CryptoExchangeDto) {
     return this.telegramBotService.cryptoExchange(body);
   }
 }

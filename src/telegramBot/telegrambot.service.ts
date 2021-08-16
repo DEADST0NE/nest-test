@@ -8,7 +8,7 @@ import { UaTransferDto } from './dto/uaTransfer.dto';
 import { InternationalTransferDto } from './dto/internationalTransfer.dto';
 import { CryptoExchangeDto } from './dto/electronExchange.dto';
 
-import { TelegramException } from './exception/telegram.exception';
+import { TelegramException } from '../_config/exception/Castom.exception';
 
 @Injectable()
 export class TelegramBotService {

@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {
-  PipeTransform,
-  Injectable,
-  ArgumentMetadata,
-  BadRequestException,
-} from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
+import { DataValidateException } from '../exception/Castom.exception';
+
+// Глобальный pipe валидации
 @Injectable()
-export class ValidationBotPipe implements PipeTransform<any> {
+export class CorePipe implements PipeTransform<any> {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
@@ -17,10 +15,12 @@ export class ValidationBotPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new BadRequestException({
-        message: 'Ошибка валидации',
-        statusCode: 1000,
-      });
+      // Приводим исключения валидации в более удобный вид
+      const errorList = errors.map((eI) => ({
+        field: eI.property,
+        error: Object.keys(eI.constraints).map((key) => eI.constraints[key]),
+      }));
+      throw new DataValidateException(errorList);
     }
     return value;
   }
